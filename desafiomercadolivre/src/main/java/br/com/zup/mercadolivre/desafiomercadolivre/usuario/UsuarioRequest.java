@@ -23,4 +23,8 @@ public class UsuarioRequest {
     public String getSenha() {
         return senha;
     }
+
+    public Usuario toModel(String senhaCriptografada) {
+        return new Usuario(this.login, senhaCriptografada);
+    }
 }

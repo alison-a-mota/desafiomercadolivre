@@ -24,4 +24,12 @@ public class Usuario {
     @Size(min = 6)
     private String senha;
 
+    public Usuario(@Email @NotBlank String login, @NotBlank @Size(min = 6) String senhaCriptografada) {
+        this.login = login;
+        this.senha = senhaCriptografada;
+    }
+
+    @Deprecated
+    public Usuario() {
+    }
 }
