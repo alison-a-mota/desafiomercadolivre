@@ -25,7 +25,7 @@ public class UsuarioRequest {
         return senha;
     }
 
-    public Usuario toModel(PasswordEncoder encoder) {
-        return new Usuario(this.login, new SenhaLimpa(this.senha, encoder));
+    public Usuario toModel() {
+        return new Usuario(this.login, new SenhaLimpa(this.senha));
     }
 }
