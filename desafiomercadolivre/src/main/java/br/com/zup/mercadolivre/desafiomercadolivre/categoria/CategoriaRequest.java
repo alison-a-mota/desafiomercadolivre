@@ -30,6 +30,6 @@ public class CategoriaRequest {
                     NOT_FOUND, "Esta categoriaMae não foi encontrada"));
             return new Categoria(this.nome, categoriaMae);
         }
-        return new Categoria(this.nome, null);
+        return new Categoria(this.nome);
     }
 }

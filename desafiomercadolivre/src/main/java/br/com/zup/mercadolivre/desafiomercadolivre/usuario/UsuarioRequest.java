@@ -10,14 +10,14 @@ public class UsuarioRequest {
 
     @NotBlank
     @Email
-    @CampoUnico(fieldName = "login", domainClass = Usuario.class)
-    private String login;
+    @CampoUnico(fieldName = "email", domainClass = Usuario.class)
+    private String email;
     @NotBlank
     @Size(min = 6)
     private String senha;
 
-    public String getLogin() {
-        return login;
+    public String getEmail() {
+        return email;
     }
 
     public String getSenha() {
@@ -25,6 +25,6 @@ public class UsuarioRequest {
     }
 
     public Usuario toModel() {
-        return new Usuario(this.login, new UsuarioSenhaLimpa(this.senha));
+        return new Usuario(this.email, new UsuarioSenhaLimpa(this.senha));
     }
 }
