@@ -1,9 +1,7 @@
 package br.com.zup.mercadolivre.desafiomercadolivre.usuario;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,9 +22,12 @@ public class Usuario {
     @Size(min = 6)
     private String senha;
 
-    public Usuario(@Email @NotBlank String login, @NotBlank @Size(min = 6) String senhaCriptografada) {
+    /**
+     * @param senhaLimpa Precisa ser uma senha descriptografada pois o construtor da classe modelo irá criptografar.
+     */
+    public Usuario(@Email @NotBlank String login, @NotNull @Size(min = 6) SenhaLimpa senhaLimpa) {
         this.login = login;
-        this.senha = senhaCriptografada;
+        this.senha = senhaLimpa.getHashDaSenha();
     }
 
     @Deprecated

@@ -25,9 +25,7 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<?> cria(@Valid @RequestBody UsuarioRequest usuarioRequest) {
 
-        String senhaCriptografada = encoder.encode(usuarioRequest.getSenha());
-        Usuario usuario = usuarioRequest.toModel(senhaCriptografada);
-
+        Usuario usuario = usuarioRequest.toModel(encoder);
         usuarioRepository.save(usuario);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
