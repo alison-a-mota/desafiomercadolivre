@@ -1,7 +1,6 @@
 package br.com.zup.mercadolivre.desafiomercadolivre.usuario;
 
 import br.com.zup.mercadolivre.desafiomercadolivre.compartilhado.anotacoes.CampoUnico;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -26,6 +25,6 @@ public class UsuarioRequest {
     }
 
     public Usuario toModel() {
-        return new Usuario(this.login, new SenhaLimpa(this.senha));
+        return new Usuario(this.login, new UsuarioSenhaLimpa(this.senha));
     }
 }

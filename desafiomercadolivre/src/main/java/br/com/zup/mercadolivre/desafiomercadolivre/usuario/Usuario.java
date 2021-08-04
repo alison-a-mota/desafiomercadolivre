@@ -23,11 +23,11 @@ public class Usuario {
     private String senha;
 
     /**
-     * @param senhaLimpa Precisa ser uma senha descriptografada pois o construtor da classe modelo irá criptografar.
+     * @param usuarioSenhaLimpa Precisa ser uma senha descriptografada pois o construtor da classe modelo irá criptografar.
      */
-    public Usuario(@Email @NotBlank String login, @NotNull @Size(min = 6) SenhaLimpa senhaLimpa) {
+    public Usuario(@Email @NotBlank String login, @NotNull @Size(min = 6) UsuarioSenhaLimpa usuarioSenhaLimpa) {
         this.login = login;
-        this.senha = senhaLimpa.getHashDaSenha();
+        this.senha = usuarioSenhaLimpa.getHashDaSenha();
     }
 
     @Deprecated
