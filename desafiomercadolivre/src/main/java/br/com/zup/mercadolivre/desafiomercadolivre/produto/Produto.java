@@ -48,6 +48,9 @@ public class Produto {
     @OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST)
     private Set<Caracteristica> caracteristicas = new HashSet<>();
 
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+    private Set<ImagemProduto> imagens = new HashSet<>();
+
     public Produto(Categoria categoria, Usuario usuario, String nome, BigDecimal valor,
                    Long quantidade, String descricao, List<CaracteristicaRequest> caracteristicas) {
         this.categoria = categoria;
@@ -81,6 +84,7 @@ public class Produto {
                 ", quantidade=" + quantidade +
                 ", descricao='" + descricao + '\'' +
                 ", caracteristicas=" + caracteristicas +
+                ", imagens=" + imagens +
                 '}';
     }
 
@@ -95,5 +99,15 @@ public class Produto {
     @Override
     public int hashCode() {
         return Objects.hash(id, instanteDeCadastro, categoria, usuario, nome, valor, quantidade, descricao, caracteristicas);
+    }
+
+    public void associaImagens(Set<String> links) {
+        Set<ImagemProduto> imagens = links.stream().map(link -> new ImagemProduto(this, link)).collect(Collectors.toSet());
+
+        this.imagens.addAll(imagens);
+    }
+
+    public boolean pertenceAoUsuario(Usuario usuario) {
+        return this.usuario.equals(usuario);
     }
 }
