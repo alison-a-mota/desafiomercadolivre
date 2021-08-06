@@ -2,11 +2,9 @@ package br.com.zup.mercadolivre.desafiomercadolivre.produto;
 
 import br.com.zup.mercadolivre.desafiomercadolivre.categoria.CategoriaRepository;
 import br.com.zup.mercadolivre.desafiomercadolivre.usuario.Usuario;
-import br.com.zup.mercadolivre.desafiomercadolivre.usuario.UsuarioRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,40 +19,34 @@ public class ProdutoController {
 
     private final ProdutoRepository produtoRepository;
     private final CategoriaRepository categoriaRepository;
-    private final UsuarioRepository usuarioRepository;
 
     public ProdutoController(UploaderFake uploaderFake, ProdutoRepository produtoRepository,
-                             CategoriaRepository categoriaRepository, UsuarioRepository usuarioRepository) {
+                             CategoriaRepository categoriaRepository) {
         this.uploaderFake = uploaderFake;
         this.produtoRepository = produtoRepository;
         this.categoriaRepository = categoriaRepository;
-        this.usuarioRepository = usuarioRepository;
     }
 
     @PostMapping
-    public ResponseEntity<?> cria(@Valid @RequestBody ProdutoRequest produtoRequest) {
+    public ResponseEntity<?> cria(@Valid @RequestBody ProdutoRequest produtoRequest,
+                                  @AuthenticationPrincipal Usuario usuarioLogado) {
 
-        //Aqui é onde pego o usuário que está logado (tá com gambiarra ainda)
-        Usuario usuario = getUsuarioLogado();
-
-        Produto produto = produtoRequest.toModel(categoriaRepository, usuario);
+        Produto produto = produtoRequest.toModel(categoriaRepository, usuarioLogado);
         produtoRepository.save(produto);
 
         return ResponseEntity.ok().body(produto.toString());
     }
 
     @PostMapping("/{produtoId}/imagem")
-    public ResponseEntity<String> novaImagem(@PathVariable Long produtoId, @Valid ImagemRequest imagemRequest) {
+    public ResponseEntity<String> novaImagem(@PathVariable Long produtoId, @Valid ImagemRequest imagemRequest,
+                                             @AuthenticationPrincipal Usuario usuarioLogado) {
 
-        //Localizar o produto
+        //Localizando o produto
         Produto produto = produtoRepository.findById(produtoId).orElseThrow(() -> new ResponseStatusException(HttpStatus
                 .NOT_FOUND, "Produto não encontrado"));
 
-        //Aqui é onde pego o usuário que está logado (tá com gambiarra ainda)
-        Usuario usuario = getUsuarioLogado();
-
-        //Validando se o produto pertence ao usuário
-        if (!produto.pertenceAoUsuario(usuario)) {
+        //Validando se o produto pertence ao usuarioLogado
+        if (!produto.pertenceAoUsuario(usuarioLogado)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Este produto é de outro usuário");
         }
 
@@ -67,12 +59,5 @@ public class ProdutoController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(produto.toString());
 
-    }
-
-    //Método temporário para pegar o usuário logado
-    public Usuario getUsuarioLogado() {
-        var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return usuarioRepository.findByEmail(((UserDetails) principal).getUsername())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "usuario não encontrado"));
     }
 }

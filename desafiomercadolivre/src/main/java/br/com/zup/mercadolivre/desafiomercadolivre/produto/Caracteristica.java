@@ -19,6 +19,8 @@ public class Caracteristica {
     @ManyToOne
     private Produto produto;
 
+    //Procurar sobre método Filter
+
     public Caracteristica(@NotBlank String nome, @NotBlank String descricao, @NotNull Produto produto) {
         this.nome = nome;
         this.descricao = descricao;
