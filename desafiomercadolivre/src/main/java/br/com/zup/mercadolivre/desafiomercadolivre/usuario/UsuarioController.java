@@ -25,6 +25,6 @@ public class UsuarioController {
         Usuario usuario = usuarioRequest.toModel();
         usuarioRepository.save(usuario);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuario.toString());
     }
 }

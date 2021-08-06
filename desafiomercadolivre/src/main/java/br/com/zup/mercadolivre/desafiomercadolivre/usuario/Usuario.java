@@ -79,4 +79,21 @@ public class Usuario implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", dataCadastro=" + dataCadastro +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }
