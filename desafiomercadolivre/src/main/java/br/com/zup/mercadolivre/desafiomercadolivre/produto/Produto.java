@@ -68,6 +68,10 @@ public class Produto {
         Assert.isTrue(this.caracteristicas.size() >= 3, "Todo produto precisa ter no mínimo 3 características");
     }
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
     @Deprecated
     public Produto() {
     }
