@@ -20,11 +20,11 @@ public class EnviarEmailService {
         this.sendGrid = sendGrid;
     }
 
-    public String enviaEmail(String destinatarioEmail, String pergunta) {
+    public void enviaEmail(String destinatarioEmail, String pergunta) {
 
         System.out.println("Email destinatário >>>>>>>>>>>>>> "+destinatarioEmail);
 
-        Email from = new Email("alisonalvesmota@gmail.com");
+        Email from = new Email("alison_jb@yahoo.com.br");
         Email to = new Email(destinatarioEmail);
 
         String subject = "Você tem uma nova pergunta!";
@@ -46,14 +46,9 @@ public class EnviarEmailService {
             System.out.println(response.getStatusCode());
             System.out.println(response.getBody());
             System.out.println(response.getHeaders());
-
-
-
         } catch (IOException ex) {
             ex.printStackTrace();
-            return "Erro ao tentar enviar e-mail";
         }
-        return "E-mail enviado";
     }
 
 }

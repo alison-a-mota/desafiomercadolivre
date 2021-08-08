@@ -3,6 +3,7 @@ package br.com.zup.mercadolivre.desafiomercadolivre.produto;
 import br.com.zup.mercadolivre.desafiomercadolivre.categoria.Categoria;
 import br.com.zup.mercadolivre.desafiomercadolivre.categoria.CategoriaRepository;
 import br.com.zup.mercadolivre.desafiomercadolivre.compartilhado.anotacoes.ExistsById;
+import br.com.zup.mercadolivre.desafiomercadolivre.produto.caracteristica.CaracteristicaRequest;
 import br.com.zup.mercadolivre.desafiomercadolivre.usuario.Usuario;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;

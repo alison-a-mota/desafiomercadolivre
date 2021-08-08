@@ -1,5 +1,6 @@
-package br.com.zup.mercadolivre.desafiomercadolivre.produto;
+package br.com.zup.mercadolivre.desafiomercadolivre.produto.imagem;
 
+import br.com.zup.mercadolivre.desafiomercadolivre.produto.Produto;
 import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
-public class ImagemProduto {
+public class Imagem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,24 +28,28 @@ public class ImagemProduto {
         return produto;
     }
 
+    public String getLink() {
+        return link;
+    }
+
     public void setProduto(Produto produto) {
         this.produto = produto;
     }
 
-    public ImagemProduto(@NotNull @Valid Produto produto, @URL String link) {
+    public Imagem(@NotNull @Valid Produto produto, @URL String link) {
         this.produto = produto;
         this.link = link;
     }
 
     @Deprecated
-    public ImagemProduto() {
+    public Imagem() {
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ImagemProduto that = (ImagemProduto) o;
+        Imagem that = (Imagem) o;
         return Objects.equals(produto, that.produto) && Objects.equals(link, that.link);
     }
 

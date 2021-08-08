@@ -38,6 +38,18 @@ public class Opiniao {
         this.produto = produto;
     }
 
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public int getNota() {
+        return nota;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
     @Deprecated
     public Opiniao() {
     }

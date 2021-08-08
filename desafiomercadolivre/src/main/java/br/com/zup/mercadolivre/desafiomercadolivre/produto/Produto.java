@@ -1,6 +1,11 @@
 package br.com.zup.mercadolivre.desafiomercadolivre.produto;
 
 import br.com.zup.mercadolivre.desafiomercadolivre.categoria.Categoria;
+import br.com.zup.mercadolivre.desafiomercadolivre.opiniao.Opiniao;
+import br.com.zup.mercadolivre.desafiomercadolivre.pergunta.Pergunta;
+import br.com.zup.mercadolivre.desafiomercadolivre.produto.caracteristica.Caracteristica;
+import br.com.zup.mercadolivre.desafiomercadolivre.produto.caracteristica.CaracteristicaRequest;
+import br.com.zup.mercadolivre.desafiomercadolivre.produto.imagem.Imagem;
 import br.com.zup.mercadolivre.desafiomercadolivre.usuario.Usuario;
 import io.jsonwebtoken.lang.Assert;
 
@@ -13,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Entity
@@ -49,7 +55,13 @@ public class Produto {
     private Set<Caracteristica> caracteristicas = new HashSet<>();
 
     @OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
-    private Set<ImagemProduto> imagens = new HashSet<>();
+    private Set<Imagem> imagens = new HashSet<>();
+
+    @OneToMany(mappedBy = "produto")
+    private Set<Pergunta> perguntas = new HashSet<>();
+
+    @OneToMany(mappedBy = "produto")
+    private Set<Opiniao> opinioes = new HashSet<>();
 
     public Produto(Categoria categoria, Usuario usuario, String nome, BigDecimal valor,
                    Long quantidade, String descricao, List<CaracteristicaRequest> caracteristicas) {
@@ -68,8 +80,70 @@ public class Produto {
         Assert.isTrue(this.caracteristicas.size() >= 3, "Todo produto precisa ter no mínimo 3 características");
     }
 
+    public <T> Set<T> mapCaracteristica(Function<Caracteristica, T> funcaoMapeadora) {
+        return this.caracteristicas.stream().map(funcaoMapeadora).collect(Collectors.toSet());
+    }
+
+    public <T> Set<T> mapImagem(Function<Imagem, T> funcaoMapeadora) {
+        return this.imagens.stream().map(funcaoMapeadora).collect(Collectors.toSet());
+    }
+
+    public <T> Set<T> mapPerguntas(Function<Pergunta, T> funcaoMapeadora) {
+        return this.perguntas.stream().map(funcaoMapeadora).collect(Collectors.toSet());
+    }
+
+    public <T> Set<T> mapOpinioes(Function<Opiniao, T> funcaoMapeadora) {
+        return this.opinioes.stream().map(funcaoMapeadora).collect(Collectors.toSet());
+    }
+
+    public void associaImagens(Set<String> links) {
+        Set<Imagem> imagens = links.stream().map(link -> new Imagem(this, link)).collect(Collectors.toSet());
+
+        this.imagens.addAll(imagens);
+    }
+
+    public boolean pertenceAoUsuario(Usuario usuario) {
+        return this.usuario.equals(usuario);
+    }
+
     public Usuario getUsuario() {
         return usuario;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public LocalDateTime getInstanteDeCadastro() {
+        return instanteDeCadastro;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public BigDecimal getValor() {
+        return valor;
+    }
+
+    public Long getQuantidade() {
+        return quantidade;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public Set<Caracteristica> getCaracteristicas() {
+        return caracteristicas;
+    }
+
+    public Set<Imagem> getImagens() {
+        return imagens;
     }
 
     @Deprecated
@@ -103,15 +177,5 @@ public class Produto {
     @Override
     public int hashCode() {
         return Objects.hash(id, instanteDeCadastro, categoria, usuario, nome, valor, quantidade, descricao, caracteristicas);
-    }
-
-    public void associaImagens(Set<String> links) {
-        Set<ImagemProduto> imagens = links.stream().map(link -> new ImagemProduto(this, link)).collect(Collectors.toSet());
-
-        this.imagens.addAll(imagens);
-    }
-
-    public boolean pertenceAoUsuario(Usuario usuario) {
-        return this.usuario.equals(usuario);
     }
 }

@@ -1,4 +1,6 @@
-package br.com.zup.mercadolivre.desafiomercadolivre.produto;
+package br.com.zup.mercadolivre.desafiomercadolivre.produto.caracteristica;
+
+import br.com.zup.mercadolivre.desafiomercadolivre.produto.Produto;
 
 import javax.validation.constraints.NotBlank;
 
