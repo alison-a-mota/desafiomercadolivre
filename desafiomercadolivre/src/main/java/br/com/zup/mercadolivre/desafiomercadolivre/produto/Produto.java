@@ -8,6 +8,8 @@ import br.com.zup.mercadolivre.desafiomercadolivre.produto.caracteristica.Caract
 import br.com.zup.mercadolivre.desafiomercadolivre.produto.imagem.Imagem;
 import br.com.zup.mercadolivre.desafiomercadolivre.usuario.Usuario;
 import io.jsonwebtoken.lang.Assert;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -104,6 +106,21 @@ public class Produto {
 
     public boolean pertenceAoUsuario(Usuario usuario) {
         return this.usuario.equals(usuario);
+    }
+
+    public void validaEstoque(int quantidade) {
+        if (quantidade > this.quantidade) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Produto sem estoque suficiente.");
+        }
+    }
+
+    public void atualizaEstoque(int quantidade) {
+        var novaQuantidade = (this.quantidade - quantidade);
+        this.setQuantidade(novaQuantidade);
+    }
+
+    public void setQuantidade(Long quantidade) {
+        this.quantidade = quantidade;
     }
 
     public Usuario getUsuario() {
