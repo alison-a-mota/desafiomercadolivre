@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.net.URI;
 
 @Profile("prod")
 @Service
@@ -25,14 +24,13 @@ public class EnviarEmailServiceProd implements EventoCompraSucesso, EnviarEmailS
         this.sendGrid = sendGrid;
     }
 
+    @Override
     public void enviaEmailGenerico(String destinatarioEmail) {
-
-        System.out.println("Email destinatário >>>>>>>>>>>>>> "+destinatarioEmail);
 
         Email from = new Email("alisson_jb@yahoo.com.br");
         Email to = new Email(destinatarioEmail);
 
-        String subject = "Você tem uma nova pergunta!";
+        String subject = "Você tem uma nova pergunta";
 
         Content content = new Content("text/plain", "Um cliente fez uma pergunta: ");
 
@@ -57,14 +55,20 @@ public class EnviarEmailServiceProd implements EventoCompraSucesso, EnviarEmailS
         }
     }
 
-    public void enviaEmailCompraSucesso(String destinatarioEmail) {
+    @Override
+    public void enviaEmailCompraSucesso(Compra compra) {
 
         Email from = new Email("alisson_jb@yahoo.com.br");
-        Email to = new Email(destinatarioEmail);
+        Email to = new Email(compra.getUsuarioComprador().getEmail());
 
-        String subject = "A sua compra foi concluída!";
+        String corpoDoEmail = ("Parabéns " +compra.getUsuarioComprador().getEmail()+ "! Você comprou do" +
+                " vendedor " +compra.getUsuarioVendedor().getUsername()+ " " +compra.getQuantidade()+ " "
+                +compra.getProduto().getNome()+ " no valor total de R$"
+                +compra.getValorDaCompra()+ ".");
 
-        Content content = new Content("text/plain", "O seu pagamento foi aprovado e a compra foi concluída!");
+        String subject = "Você comprou " +compra.getQuantidade()+ " " +compra.getProduto().getNome();
+
+        Content content = new Content("text/plain", corpoDoEmail);
 
         Mail mail = new Mail(from, subject, to, content);
 
@@ -87,14 +91,16 @@ public class EnviarEmailServiceProd implements EventoCompraSucesso, EnviarEmailS
         }
     }
 
-    public void enviaEmailCompraFalhou(String destinatarioEmail) {
+    @Override
+    public void enviaEmailCompraFalhou(String destinatarioEmail, Long compraId) {
 
         Email from = new Email("alisson_jb@yahoo.com.br");
         Email to = new Email(destinatarioEmail);
 
         String subject = "O seu pagamento foi negado e precisa ser revisto";
 
-        Content content = new Content("text/plain", "O seu pagamento não foi concluído e precisará ser refeito");
+        Content content = new Content("text/plain", "O seu pagamento não foi concluído e precisará ser refeito. " +
+                "Você poderá verificar no link http://localhost:8080/api/compra/" +compraId);
 
         Mail mail = new Mail(from, subject, to, content);
 
@@ -119,6 +125,6 @@ public class EnviarEmailServiceProd implements EventoCompraSucesso, EnviarEmailS
 
     @Override
     public void processa(Compra compra) {
-        System.out.println("Enviou o e-mail");
+        enviaEmailCompraSucesso(compra);
     }
 }

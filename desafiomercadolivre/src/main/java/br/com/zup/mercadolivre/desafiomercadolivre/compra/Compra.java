@@ -118,6 +118,26 @@ public class Compra {
         return usuarioComprador;
     }
 
+    public Usuario getUsuarioVendedor(){
+        return produto.getUsuario();
+    }
+
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public BigDecimal getValorProdutoNaHoraDaCompra() {
+        return valorProdutoNaHoraDaCompra;
+    }
+
+    public BigDecimal getValorDaCompra() {
+        return valorDaCompra;
+    }
+
     @Deprecated
     public Compra() {
     }
