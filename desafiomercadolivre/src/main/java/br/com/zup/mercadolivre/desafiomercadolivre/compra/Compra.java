@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -67,7 +68,7 @@ public class Compra {
         return produto.getValor().multiply(BigDecimal.valueOf(quantidade));
     }
 
-    public String getUrlRedirecionamento() {
+    public URI getUriRedirecionamento() {
         return gateway.UrlRedirecionamento(this.getId(), gatewayReturn());
     }
 
@@ -75,7 +76,10 @@ public class Compra {
      * Não sei como será implementado esse método.
      */
     private String gatewayReturn() {
-        return "gateway_return";
+        if(gateway.equals(Gateways.PAGSEGURO)){
+            return "localhost/api/retorno-pagseguro";
+        }
+        return "localhost/api/retorno-paypal";
     }
 
     public void adicionaTransacao(RetornoPagamentoGateway request) {
@@ -89,30 +93,13 @@ public class Compra {
         this.transacoes.add(novaTransacao);
     }
 
-    private Set<Transacao> transacoesComSucesso() {
-        Set<Transacao> transacoesComSucesso = this.transacoes.stream().filter(Transacao::concluidaComSucesso).collect(Collectors.toSet());
-        Assert.isTrue(transacoesComSucesso.size() <= 1,
-                "Vish deu ruim. Tem mais de uma compra com transação Com Sucesso! compraId: " + this.id);
-
-        return transacoesComSucesso;
-    }
-
-    public boolean processadaComSucesso() {
-        return !transacoesComSucesso().isEmpty();
-    }
-
-    public String verificaESetaStatus(RetornoPagamentoGateway retornoPagamentoGateway) {
-        if (status.equals(CompraStatus.SUCESSO)) {
-            return "Esta compra já foi concluída, o Status não pode ser alterado";
+    public void verificaESetaStatus(RetornoPagamentoGateway retornoPagamentoGateway) {
+        if (!CompraStatus.SUCESSO.equals(status) && retornoPagamentoGateway.getStatusTransacao().equals(TransacaoStatus.ERRO)) {
+            status = CompraStatus.FALHA;
         }
-        if (!status.equals(CompraStatus.SUCESSO) && retornoPagamentoGateway.getStatusTransacao().equals(TransacaoStatus.ERRO)){
-            setStatus(CompraStatus.FALHA);
-            return "O Gateway retornou Erro de pagamento, o Status da compra foi alterado para Falha.";
+        if (!CompraStatus.SUCESSO.equals(status) && retornoPagamentoGateway.getStatusTransacao().equals(TransacaoStatus.SUCESSO)) {
+            status = CompraStatus.SUCESSO;
         }
-        if (!status.equals(CompraStatus.SUCESSO) && retornoPagamentoGateway.getStatusTransacao().equals(TransacaoStatus.SUCESSO)){
-            setStatus(CompraStatus.SUCESSO);
-            return "O Gateway retornou Erro de pagamento, o Status da compra foi alterado para Falha.";
-        } return "Houve algum erro não previsto";
     }
 
     public Long getId() {
@@ -123,9 +110,12 @@ public class Compra {
         return gateway;
     }
 
-    public void setStatus(CompraStatus status) {
-//        Assert.isTrue(this.status.equals(CompraStatus.SUCESSO), "Esta compra já foi concluída e o status não pode ser alterado.");
-        this.status = status;
+    public CompraStatus getStatus() {
+        return status;
+    }
+
+    public Usuario getUsuarioComprador() {
+        return usuarioComprador;
     }
 
     @Deprecated

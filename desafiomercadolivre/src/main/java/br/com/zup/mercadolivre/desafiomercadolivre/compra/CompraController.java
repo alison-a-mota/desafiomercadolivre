@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import javax.xml.stream.Location;
 
 @RestController
 @RequestMapping("api/compra")
@@ -49,8 +48,7 @@ public class CompraController {
 
         return ResponseEntity
                 .status(HttpStatus.FOUND)
-//                .location()
-                .body(compra.getUrlRedirecionamento());
+                .location(compra.getUriRedirecionamento()).build();
 
     }
 }
