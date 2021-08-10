@@ -14,7 +14,7 @@ public class CompraRequest {
     @Positive
     private int quantidade;
     @NotNull
-    private CompraGateway gateway;
+    private Gateways gateway;
 
     public Long getProdutoId() {
         return produtoId;
@@ -24,7 +24,7 @@ public class CompraRequest {
         return quantidade;
     }
 
-    public CompraGateway getGateway() {
+    public Gateways getGateway() {
         return gateway;
     }
 

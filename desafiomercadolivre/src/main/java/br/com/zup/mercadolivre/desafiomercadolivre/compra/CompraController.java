@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import javax.xml.stream.Location;
 
 @RestController
 @RequestMapping("api/compra")
@@ -23,14 +24,16 @@ public class CompraController {
     private final CompraRepository compraRepository;
     private final EnviarEmailService enviarEmailService;
 
-    public CompraController(ProdutoRepository produtoRepository, CompraRepository compraRepository, EnviarEmailService enviarEmailService) {
+    public CompraController(ProdutoRepository produtoRepository, CompraRepository compraRepository,
+                            EnviarEmailService enviarEmailService) {
         this.produtoRepository = produtoRepository;
         this.compraRepository = compraRepository;
         this.enviarEmailService = enviarEmailService;
     }
 
     @PostMapping
-    public ResponseEntity<String> cria(@Valid @RequestBody CompraRequest compraRequest, @AuthenticationPrincipal Usuario usuarioLogado) {
+    public ResponseEntity<String> cria(@Valid @RequestBody CompraRequest compraRequest,
+                                       @AuthenticationPrincipal Usuario usuarioLogado) {
 
         Produto produto = produtoRepository.findById(compraRequest.getProdutoId()).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado."));
@@ -42,9 +45,12 @@ public class CompraController {
 
         compraRepository.save(compra);
 
-        enviarEmailService.enviaEmail(produto.getUsuario().getEmail());
+        enviarEmailService.enviaEmailGenerico(produto.getUsuario().getEmail());
 
-        return ResponseEntity.status(HttpStatus.FOUND).body(compra.getUrlRedirecionamento());
+        return ResponseEntity
+                .status(HttpStatus.FOUND)
+//                .location()
+                .body(compra.getUrlRedirecionamento());
 
     }
 }

@@ -29,4 +29,9 @@ public class ExceptionHandlers {
     public ResponseEntity<String> interceptaBeanValidation(HttpMessageNotReadableException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Corpo da requisição inválido.");
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> interceptaBeanValidation(IllegalArgumentException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+    }
 }

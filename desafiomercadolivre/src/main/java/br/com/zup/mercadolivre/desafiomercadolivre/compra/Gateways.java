@@ -1,6 +1,6 @@
 package br.com.zup.mercadolivre.desafiomercadolivre.compra;
 
-public enum CompraGateway {
+public enum Gateways {
 
     PAYPAL {
         @Override

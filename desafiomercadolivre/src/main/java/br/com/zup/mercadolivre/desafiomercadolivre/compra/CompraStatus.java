@@ -2,5 +2,9 @@ package br.com.zup.mercadolivre.desafiomercadolivre.compra;
 
 public enum CompraStatus {
 
-    INICIADA
+    INICIADA,
+    SUCESSO,
+    FALHA;
+
+
 }
