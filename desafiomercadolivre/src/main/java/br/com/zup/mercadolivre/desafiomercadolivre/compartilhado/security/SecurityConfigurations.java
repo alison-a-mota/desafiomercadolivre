@@ -50,6 +50,11 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/retorno-pagseguro/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/retorno-paypal/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/produto/**").permitAll()
+                //Manter somente nos testes - PRECISA CONFIGURAR O PROFILE DEV
+                .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/actuator").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/traces").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/traces/**").permitAll()
                 .anyRequest().authenticated()
                 .and().cors()
                 .and().csrf().disable()

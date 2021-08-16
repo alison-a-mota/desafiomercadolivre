@@ -46,9 +46,10 @@ public class CompraController {
 
         enviarEmailService.enviaEmailGenerico(produto.getUsuario().getEmail());
 
+        System.out.println("Teste do dev tools");
+
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .location(compra.getUriRedirecionamento()).build();
-
     }
 }

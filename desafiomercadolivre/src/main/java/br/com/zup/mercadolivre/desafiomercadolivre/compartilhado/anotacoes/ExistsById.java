@@ -30,16 +30,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 public @interface ExistsById {
 
-    //Mensagem caso
     String message() default "Objeto não encontrado no banco.";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
-    //Campo que será validado
     String fieldName();
 
-    //Classe que será aiksdfjaosdfh asd
     Class<?> domainClass();
 }
